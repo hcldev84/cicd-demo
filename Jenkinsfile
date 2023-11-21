@@ -1,22 +1,27 @@
 pipeline {
     agent any
     stages {
-        stage("Build") {
-            steps {
-                sh "./gradlew build"
-            }
-        }
-        stage("Test") {
-            steps {
-                sh "./gradlew check"
-            }
+        stage("No-op") {
+            sh "ls"
         }
     }
 
     post {
         always {
-            junit "build/reports/**/*.xml"
-            archiveArtifacts artifacts: "build/libs/**/*.jar", fingerprint: true
+            echo "One way or another, I have finished"
+            deleteDir() /* cleanup the pipeline's workspace */
+        }
+        success {
+            echo "I succeeded!"
+        }
+        unstable {
+            echo "I'm unstable!"
+        }
+        failure {
+            echo "I failed!"
+        }
+        changed {
+            echo "Things were different before!"
         }
     }
 }
