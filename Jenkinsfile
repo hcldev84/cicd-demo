@@ -11,7 +11,9 @@ pipeline {
             }
         }
         stage("Sanity Check") {
-            input "Does the staging environment look ok?"
+            steps {
+                input "Does the staging environment look ok?"
+            }
         }
         stage("Deploy Production") {
             steps {
