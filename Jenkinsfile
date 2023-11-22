@@ -1,29 +1,19 @@
 pipeline {
     agent any
+    options {
+        skipStagesAfterUnstable()
+    }
     stages {
-        stage("No-op") {
+        stage("Deploy Staging") {
             steps {
-                sh "ls"
+                sh "./deploy staging"
+                sh "./run-smoke-tests"
             }
         }
-    }
-
-    post {
-        always {
-            echo "One way or another, I have finished"
-            deleteDir() /* cleanup the pipeline's workspace */
-        }
-        success {
-            echo "I succeeded!"
-        }
-        unstable {
-            echo "I'm unstable!"
-        }
-        failure {
-            echo "I failed!"
-        }
-        changed {
-            echo "Things were different before!"
+        stage("Deploy Production") {
+            steps {
+                sh "./deploy production"
+            }
         }
     }
 }
